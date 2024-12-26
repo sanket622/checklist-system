@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .passed {
+      color: green;
+    }
+    .failed {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Checklist Dashboard</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="checklist-table"></tbody>
+  </table>
+  <script>
+    async function loadChecklist() {
+      try {
+        const response = await fetch("/checklist");
+        const data = await response.json();
+        const table = document.getElementById("checklist-table");
+        table.innerHTML = data.map(rule => `
+          <tr>
+            <td>${rule.name}</td>
+            <td>${rule.description}</td>
+            <td class="${rule.status.toLowerCase()}">${rule.status}</td>
+          </tr>
+        `).join("");
+      } catch (error) {
+        console.error("Failed to load checklist:", error);
+      }
+    }
+    loadChecklist();
+  </script>
+</body>
+</html>
